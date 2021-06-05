@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <set>
+#include <map>
 #include "Dense"
 
 using Eigen::ArrayXd;
@@ -33,6 +35,14 @@ class GNB {
   string predict(const vector<double> &sample);
 
   vector<string> possible_labels = {"left","keep","right"};
+
+  vector<VectorXd> gaussian_std;
+  vector<VectorXd> gaussian_mean;
+  vector<double> prior;
+  vector<int> count;
+
+  std::set<string> label;
+  std::map<string, int> label_code;
 };
 
 #endif  // CLASSIFIER_H

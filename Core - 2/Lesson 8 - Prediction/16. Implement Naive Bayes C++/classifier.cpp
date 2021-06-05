@@ -32,7 +32,44 @@ void GNB::train(const vector<vector<double>> &data,
    *
    * TODO: Implement the training function for your classifier.
    */
-  
+    label = std::set<string>(labels.begin(), labels.end());
+
+    int id = 0;
+    for (std::set<string>::iterator it=label.begin(); it != label.end(); ++it) {
+        label_code[*it] = id++;
+    }
+
+    int label_size = label.size();
+    int feature_size = data[0].size();
+
+    gaussian_std = vector<VectorXd>(label_size, VectorXd::Zero(feature_size));
+    gaussian_mean = vector<VectorXd>(label_size, VectorXd::Zero(feature_size));
+    prior = vector<double> (label_size);
+    count = vector<int> (label_size, 0); //can be used for online training
+
+    for (unsigned int i = 0; i < data.size(); ++i) {
+        int code = label_code[labels[i]];
+        gaussian_mean[code] += VectorXd::Map(data[i].data(), data[i].size());
+        count[code]++;
+    }
+
+    for (int i = 0; i < label_size; ++i) {
+        gaussian_mean[i] /= count[i];
+        prior[i] = count[i] * 1.0 / data.size();
+    }
+
+    for (unsigned int i = 0; i < data.size(); ++i) {
+        int code = label_code[labels[i]];
+        VectorXd data_vector = VectorXd::Map(data[i].data(), data[i].size());
+        VectorXd residual = (data_vector - gaussian_mean[code]);
+        residual = (residual.array() * residual.array());
+        gaussian_std[code] += residual;
+    }
+
+    for (int i =0; i < label_size; ++i) {
+        gaussian_std[i] /= count[i];
+        gaussian_std[i] = gaussian_std[i].array().sqrt();
+    }
 }
 
 string GNB::predict(const vector<double> &sample) {
