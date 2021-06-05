@@ -5,9 +5,10 @@
 #include <vector>
 #include <set>
 #include <map>
-#include "Dense"
+#include "Eigen/Dense"
 
 using Eigen::ArrayXd;
+using Eigen::VectorXd;
 using std::string;
 using std::vector;
 

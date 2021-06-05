@@ -4,6 +4,7 @@
 #include <vector>
 
 using Eigen::ArrayXd;
+using Eigen::VectorXd;
 using std::string;
 using std::vector;
 
