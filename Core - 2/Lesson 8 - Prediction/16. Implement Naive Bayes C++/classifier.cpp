@@ -72,6 +72,14 @@ void GNB::train(const vector<vector<double>> &data,
     }
 }
 
+inline double gaussian(double x, double ux, double sigmaX) {
+    double gaussNorm = 1/ (sqrt( 2 * M_PI) * sigmaX);
+    double exponent = (x - ux) * (x - ux) / ( 2 * sigmaX * sigmaX );
+    double prob =  gaussNorm * exp(-0.5 * exponent) ;
+
+    return prob;
+}
+
 string GNB::predict(const vector<double> &sample) {
   /**
    * Once trained, this method is called and expected to return 
