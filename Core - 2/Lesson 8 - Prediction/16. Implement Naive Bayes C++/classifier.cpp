@@ -91,6 +91,29 @@ string GNB::predict(const vector<double> &sample) {
    *
    * TODO: Complete this function to return your classifier's prediction
    */
-  
-  return this -> possible_labels[1];
+
+    int label_size = label.size();
+    vector<double> predictions(label_size);
+
+    for (int i = 0; i < label_size; ++i) {
+        predictions[i] = prior[i];
+        for (int j = 0; j < gaussian_mean[i].size(); ++j){
+            double prob = gaussian(sample[j], gaussian_mean[i][j], gaussian_std[i][j]);
+            predictions[i] *= prob;
+        }
+    }
+
+    int max_id = -1;
+    double max_prob = 0;
+    for (int i = 0; i < label_size; ++i){
+        if(predictions[i] > max_prob){
+            max_prob = predictions[i];
+            max_id = i;
+        }
+    }
+
+    std::set<string>::iterator it = label.begin();
+    for(int i=0; i < max_id; ++i) it++;
+
+    return (*it);
 }
